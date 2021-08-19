@@ -1,7 +1,6 @@
-FROM centos:centos7
+FROM centos:7
 
-RUN mkdir -p /cvmfs /etc/cvmfs /var/lib/cvmfs && \
-yum fs filter languages en && yum fs filter documentation && \
+RUN yum fs filter languages en && yum fs filter documentation && \
 yum -y update && yum install -y openssh-clients.x86_64 && yum clean all && rm -rf /var/cache/yum
 
 ENTRYPOINT ["/usr/bin/ssh"]
