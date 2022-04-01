@@ -1,0 +1,15 @@
+Bootstrap: docker
+From: adriansevcenco/el7ssh
+
+%labels
+    Author Adrian.Sevcenco@spacescience.ro
+    Version 0.0.1
+    Description Minimal el7 ssh client
+
+
+%help
+el7 ssh client
+
+%runscript
+exec /usr/bin/ssh "${@}"
+

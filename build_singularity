@@ -1,0 +1,27 @@
+#!/usr/bin/env bash
+
+U=$(id -nu)
+G=$(id -ng)
+
+NAME="el7ssh"
+SING_DEF="el7ssh.def"
+
+if [[ "${1}" == "sandbox" ]]; then
+    shift
+    DO_SANDBOX="--sandbox --fix-perms"
+fi
+
+[[ -n ${DO_SANDBOX} ]] && NAME="${NAME}_sandbox"
+
+NAME="${NAME}.sif"
+[[ -e "${NAME}" ]] && rm -f "${NAME}"
+
+singularity -v build --fakeroot ${DO_SANDBOX} "${NAME}" "${SING_DEF}"
+
+[[ -n "${DO_SANDBOX}" ]] && sudo chown -R ${U}:${G} "${NAME}"
+sudo chown -R ${U}:${G} "${SINGULARITY_CACHEDIR:-${HOME}/.singularity/cache}"
+
+echo "Push to https://cloud.sylabs.io/library/adriansev .."
+singularity remote login -u adriansev --tokenfile ~/sing_sylabs.token && \
+singularity push -U ${NAME} library://adriansev/default/el7ssh:latest && echo "Done" || { echo "Fail to push to sylabs registry"; exit 1; }
+

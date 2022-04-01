@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+
+podman login --username adriansevcenco -p "$(< ~/docker_hub.token)" docker.io && \
+podman build --no-cache --rm --format docker -t el7ssh:latest -f Dockerfile . || { echo "Fail to build docker image"; exit 1; }
+podman push el7ssh:latest docker.io/adriansevcenco/el7ssh:latest
+
